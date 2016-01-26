@@ -101,6 +101,47 @@ gulp.task('mocha', function() {
 
 })
 
+gulp.task('test-watch', function () {
+
+  nodemon({
+    //env: ,
+    ext: 'html',
+    //nodeArgs: ['--debug'],
+    script: 'test/helpers/browser/runner.js',
+    watch: ['test/helpers/browser/runner.js']
+  })
+  .on('start', function() {
+
+    livereload.listen()
+
+    gulp.watch('app/**/*.js', ['test-webpack'])
+    gulp.watch('app/**/*.js', livereload.reload)
+    gulp.watch('test/integration/**/*.js', ['test-webpack'])
+    gulp.watch('test/unit/**/*.js', ['test-webpack'])
+
+  })
+  .on('restart', function () {
+
+    var files = arguments[0]
+
+    files.forEach( function(file) {
+      file = file.replace(process.cwd(), '') // Just show relative file path.
+
+      console.log('File changed:', chalk.yellow(file))
+    })
+
+  })
+
+})
+
+gulp.task('test-webpack', function() {
+
+  gulp.src([])
+  .pipe(webpack(require('./webpack.test')))
+  .pipe(gulp.dest('./test/helpers/browser/js/'))
+
+})
+
 gulp.task('vendor-styles', function(done) {
 
   gulp.src([
@@ -173,4 +214,5 @@ gulp.task('build',  ['copy', 'styles', 'webpack'])
 gulp.task('copy',   ['copy-assets'])
 gulp.task('styles', ['vendor-styles', 'app-styles'])
 gulp.task('t',      ['mocha'])
+gulp.task('tw',     ['test-webpack', 'test-watch'])
 gulp.task('w',      ['build', 'watch'])
