@@ -3,8 +3,10 @@ import {Auth} from 'structure-sdk'
 
 class AuthModel extends BaseModel {
 
-  constructor() {
-    super()
+  constructor(attr = {}, options = {}) {
+    super(attr, Object.assign({}, {
+      store: 'user'
+    }, options))
 
     this.resource = new Auth({model: this})
   }

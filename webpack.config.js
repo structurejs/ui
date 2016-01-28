@@ -24,17 +24,12 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel',
-        only: [
-          'components/**/*.js',
-          'config/**/*.js',
-          'controllers/**/*.js',
-          'mixins/**/*.js',
-          'models/**/*.js',
-          'node_modules/dragon.js/**/*.js',
-          'views/**/*.js',
-          'index.js',
-          'routes.js'
+        loader: 'babel-loader',
+        exclude: [
+          /bower_components/,
+          /node_modules\/(?!dragon*)/,
+          /node_modules\/(?!eisley*)/,
+          /node_modules\/(?!structure*)/
         ],
         query: {
           //cacheDirectory: true,

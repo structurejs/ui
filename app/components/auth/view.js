@@ -19,28 +19,27 @@ class AuthView extends FormView {
 
     super(Object.assign({}, {
       container: '#app-container',
+      id: 'auth-view',
       reducer: function AuthViewReducer(state = initialState, action) {
-        //console.log('state', state)
-        console.log('action', action)
 
-        switch(action.type) {
+        switch(state.current) {
 
-          case 'ERROR':
-            console.log('state: error', state)
+          case 'submitting':
+
             return Object.assign({}, state, {
-              error: 'foo'
-            })
-
-          case 'SUBMITTING':
-            console.log('state: submitting', state)
-            return Object.assign({}, state, {
-              spinning: 'abc'
+              text: {
+                submit: require('../../components/auth/templates/spinner')
+              }
             })
 
           default:
-            console.log('state: default', state)
-            console.log('what is idom', this.idom)
-            return state
+
+            return Object.assign({}, state, {
+              text: {
+                submit: options.type == 'create' ? 'Create Account' : 'Login'
+              }
+            })
+
         }
 
       }
@@ -52,29 +51,35 @@ class AuthView extends FormView {
     e.preventDefault()
 
     console.log("create form submitted", this.model)
-    this.state('submitting', {partials: {
-      spinner: require('../../components/auth/templates/spinner')
-    }})
+    this.state('submitting')
 
     var pkg = {
       email: this.refs('email').value,
       password: this.refs('password').value,
       username: this.refs('username').value
     }
-    return console.log('da pkg yo', pkg)
-    var validate = this.validate(pkg)
-    console.log("validate", validate)
-    if(!validate.error) {
+    console.log('da pkg yo', pkg)
+    return
+    this.model.validate(pkg, (err, valid) => {
 
-      this.state.set('submitting')
+      if(err) {
+        this.state('error')
+        console.error('No validy yos', err)
+        return
+      }
 
-      this.model.create(pkg).then( (res) => {
+      this.model.create(pkg, function(err, res) {
 
-        console.log("what dis res", res)
+        if(err) {
+          console.error('Model no creates :/', err)
+          return
+        }
 
-      }, this.formError)
+        console.log('res', res)
 
-    }
+      })
+
+    })
 
   }
 

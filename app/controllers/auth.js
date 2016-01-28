@@ -1,16 +1,35 @@
-import Dragon              from 'dragon.js'
-import View   from '../components/auth/view'
+import Auth         from '../models/auth'
+import Dragon       from 'dragon.js'
+import schemaCreate from '../components/auth/schemas/create'
+import schemaLogin  from '../components/auth/schemas/login'
+import User         from '../models/user'
+import View         from '../components/auth/view'
 
 class AuthController extends Dragon.Controller {
 
   create(req, res, next) {
-    this.model = new Dragon.Model({
+    this.model = new User({
       partials: {spinner: ''}
+    }, {
+      schema: schemaCreate
     })
 
     this.view = new View({
       model: this.model,
       type: 'create'
+    })
+  }
+
+  login(req, res, next) {
+    this.model = new Auth({
+      partials: {spinner: ''}
+    }, {
+      schema: schemaLogin
+    })
+
+    this.view = new View({
+      model: this.model,
+      type: 'login'
     })
   }
 

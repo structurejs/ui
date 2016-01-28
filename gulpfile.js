@@ -33,14 +33,10 @@ gulp.task('app-styles', function() {
     './app/styles/blocks/**/sm.css',
     './app/styles/blocks/**/md.css',
     './app/styles/blocks/**/lg.css',
-    './app/components/**/styles/xs.css',
-    './app/components/**/styles/sm.css',
-    './app/components/**/styles/md.css',
-    './app/components/**/styles/lg.css',
-    './app/components/**/styles/blocks/**/xs.css',
-    './app/components/**/styles/blocks/**/sm.css',
-    './app/components/**/styles/blocks/**/md.css',
-    './app/components/**/styles/blocks/**/lg.css',
+    './app/components/**/xs.css',
+    './app/components/**/sm.css',
+    './app/components/**/md.css',
+    './app/components/**/lg.css',
   ])
   .pipe(sourcemaps.init())
   .pipe(postcss([
@@ -98,6 +94,40 @@ gulp.task('mocha', function() {
     .once('end', function () {
       process.exit()
     })
+
+})
+
+gulp.task('styles-watch', function () {
+
+  nodemon({
+    //ext: 'hbs',
+    //ignore: ['*.css'],
+    //nodeArgs: ['--debug'],
+    script: 'index.js',
+    watch: ['server']
+  })
+  .on('start', function() {
+
+    livereload.listen()
+
+    gulp.watch(path.join(__dirname, './app/assets/**/*'),                ['copy-assets'])
+    gulp.watch(path.join(__dirname, './app/styles/blocks/**/*.css'),     ['app-styles'])
+    gulp.watch(path.join(__dirname, './app/components/**/*.css'),        ['app-styles'])
+    gulp.watch(path.join(__dirname, './public/**/*.css'),                livereload.changed)
+
+  })
+  //.on('change', ['lint'])
+  .on('restart', function () {
+
+    var files = arguments[0]
+
+    files.forEach( function(file) {
+      file = file.replace(process.cwd(), '') // Just show relative file path.
+
+      console.log('File changed:', chalk.yellow(file))
+    })
+
+  })
 
 })
 
@@ -167,9 +197,8 @@ gulp.task('vendor-styles', function(done) {
 gulp.task('watch', function () {
 
   nodemon({
-    env: env,
     //ext: 'hbs',
-    ignore: ['*.css', '*.styl'],
+    ignore: ['*.css'],
     //nodeArgs: ['--debug'],
     script: 'index.js',
     watch: ['server']
@@ -213,6 +242,7 @@ gulp.task('b',      ['build'])
 gulp.task('build',  ['copy', 'styles', 'webpack'])
 gulp.task('copy',   ['copy-assets'])
 gulp.task('styles', ['vendor-styles', 'app-styles'])
+gulp.task('sw',     ['styles', 'styles-watch'])
 gulp.task('t',      ['mocha'])
 gulp.task('tw',     ['test-webpack', 'test-watch'])
 gulp.task('w',      ['build', 'watch'])

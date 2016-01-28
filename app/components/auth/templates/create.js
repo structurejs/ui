@@ -18,12 +18,11 @@ module.exports = `
     </div>
 
     <button id="form-submit" class="btn btn-primary btn-lg btn-block btn-submit" href="#">
-      <span class="btn-auth-text">Create Account</span>
-      #{partials.spinner}
+      <span class="btn-auth-text">#{text.submit}</span>
 
     </button>
 
-    <a class="login-link" href="/auth/login">Sign In</a>
+    <a class="link-login" href="/auth/login">Sign In</a>
 
   </form>
 </div>
