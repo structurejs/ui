@@ -1,0 +1,52 @@
+.btn-group {
+  margin-right: 20px;
+}
+
+#template-fields {
+  margin-top: 20px;
+
+  .template-field-header {
+    display: inline-block;
+  }
+
+  .template-field-delete {
+    color: red;
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 20px;
+  }
+
+  .template-field {
+    display: block;
+    margin-bottom: 20px;
+
+    .template-field-value {
+      background-color: #fff;
+      border: 0;
+      display: block;
+      outline: none;
+      padding: 8px;
+      width: 100%;
+    }
+
+    textarea.template-field-value {
+      background-color: #fff;
+      border: 0;
+      display: block;
+      outline: none;
+      padding: 8px;
+      resize: vertical;
+      width: 100%;
+    }
+
+    .template-field-desc {
+      background: none;
+      border: 0;
+      color: #898989;
+      display: block;
+      outline: none;
+      width: 100%;
+    }
+  }
+
+}

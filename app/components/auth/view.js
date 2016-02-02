@@ -1,5 +1,6 @@
 import Dragon   from 'dragon.js'
 import FormView from '../../views/form'
+import {router} from '../../index'
 
 class AuthView extends FormView {
 
@@ -28,7 +29,7 @@ class AuthView extends FormView {
 
             return Object.assign({}, state, {
               text: {
-                submit: require('../../components/auth/templates/spinner')
+                submit: require('../../templates/partials/spinner')
               }
             })
 
@@ -50,16 +51,16 @@ class AuthView extends FormView {
   formSubmit(e) {
     e.preventDefault()
 
-    console.log("create form submitted", this.model)
+    console.log("form submitted", this.model)
     this.state('submitting')
 
     var pkg = {
-      email: this.refs('email').value,
-      password: this.refs('password').value,
-      username: this.refs('username').value
+      email: this.refs('email')[0] ? this.refs('email')[0].value : '',
+      password: this.refs('password')[0] ? this.refs('password')[0].value : '',
+      username: this.refs('username')[0] ? this.refs('username')[0].value : ''
     }
-    console.log('da pkg yo', pkg)
-    return
+    console.log('auth pkg', pkg)
+
     this.model.validate(pkg, (err, valid) => {
 
       if(err) {
@@ -68,16 +69,33 @@ class AuthView extends FormView {
         return
       }
 
-      this.model.create(pkg, function(err, res) {
+      if(this.options.type == 'login') {
+        this.model.login(pkg, function(err, res) {
 
-        if(err) {
-          console.error('Model no creates :/', err)
-          return
-        }
+          if(err) {
+            console.error('Login error :/', err)
+            return
+          }
 
-        console.log('res', res)
+          console.log('login successful', res)
+          router.navigate('/dashboard')
 
-      })
+        })
+      }
+
+      else {
+        this.model.create(pkg, function(err, res) {
+
+          if(err) {
+            console.error('Model no creates :/', err)
+            return
+          }
+
+          console.log('create account successful', res)
+          router.navigate('/dashboard')
+
+        })
+      }
 
     })
 

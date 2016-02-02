@@ -18,7 +18,7 @@ class NavigationView extends Dragon.View {
   constructor(options = {}) {
 
     super(Object.assign({}, {
-      container: '#app-container',
+      //container: '#app-container',
       id: 'navigation-view',
       template: require('./templates/index')
     }, options))

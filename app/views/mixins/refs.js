@@ -23,13 +23,13 @@ class RefsViewMixin {
         var $selector = this.$(selector)
 
         if($selector.length == 1) {
-          this.$refs[ref] = $selector[0]
+          //this.$refs[ref] = $selector[0]
         }
 
         else {
-          this.$refs[ref] = $selector
+          //this.$refs[ref] = $selector
         }
-        //this.$refs[ref] = $selector
+        this.$refs[ref] = $selector
 
         break;
 

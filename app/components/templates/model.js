@@ -1,5 +1,5 @@
 import BaseModel from '../../models/base'
-import {Base} from 'structure-sdk'
+import {Template} from 'structure-sdk'
 
 class TemplateModel extends BaseModel {
 
@@ -8,8 +8,12 @@ class TemplateModel extends BaseModel {
       //store: 'user'
     }, options))
 
-    this.resource = new Base({model: this})
+    this.resource = new Template({model: this})
+
+    this.attr.fieldList = []
   }
+
+
 
 }
 

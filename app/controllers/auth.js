@@ -8,9 +8,7 @@ import View         from '../components/auth/view'
 class AuthController extends Dragon.Controller {
 
   create(req, res, next) {
-    this.model = new User({
-      partials: {spinner: ''}
-    }, {
+    this.model = new User(null, {
       schema: schemaCreate
     })
 
@@ -21,9 +19,7 @@ class AuthController extends Dragon.Controller {
   }
 
   login(req, res, next) {
-    this.model = new Auth({
-      partials: {spinner: ''}
-    }, {
+    this.model = new Auth(null, {
       schema: schemaLogin
     })
 

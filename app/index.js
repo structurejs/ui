@@ -13,3 +13,7 @@ var app = new Dragon.Application({
 })
 
 app.start()
+var router = app.router
+
+export {app}
+export {router}

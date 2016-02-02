@@ -11,6 +11,7 @@ var chalk                  = require('chalk'),
     path                   = require('path'),
     postcss                = require('gulp-postcss'),
     postcssAutoprefixer    = require('autoprefixer'),
+    postcssColor           = require('postcss-color-function'),
     postcssDiscardComments = require('postcss-discard-comments'),
     postcssFontMagician    = require('postcss-font-magician'),
     postcssMixins          = require('postcss-mixins'),
@@ -33,6 +34,10 @@ gulp.task('app-styles', function() {
     './app/styles/blocks/**/sm.css',
     './app/styles/blocks/**/md.css',
     './app/styles/blocks/**/lg.css',
+    './app/styles/blocks/**/**/xs.css',
+    './app/styles/blocks/**/**/sm.css',
+    './app/styles/blocks/**/**/md.css',
+    './app/styles/blocks/**/**/lg.css',
     './app/components/**/xs.css',
     './app/components/**/sm.css',
     './app/components/**/md.css',
@@ -42,6 +47,7 @@ gulp.task('app-styles', function() {
   .pipe(postcss([
     postcssMixins({mixinsDir: path.join(__dirname,'/app/styles/mixins/')}),
     postcssSimpleVars({variables: require('./app/styles/base/variables')}),
+    postcssColor(),
     postcssFontMagician({
       hosted: './app/assets/fonts'
     }),
@@ -111,7 +117,7 @@ gulp.task('styles-watch', function () {
     livereload.listen()
 
     gulp.watch(path.join(__dirname, './app/assets/**/*'),                ['copy-assets'])
-    gulp.watch(path.join(__dirname, './app/styles/blocks/**/*.css'),     ['app-styles'])
+    gulp.watch(path.join(__dirname, './app/styles/**/*.css'),            ['app-styles'])
     gulp.watch(path.join(__dirname, './app/components/**/*.css'),        ['app-styles'])
     gulp.watch(path.join(__dirname, './public/**/*.css'),                livereload.changed)
 

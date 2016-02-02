@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     vendor: [
       'dragon.js',
+      'dragula',
       'eisley',
       //'moment'
     ],
