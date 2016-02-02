@@ -30,7 +30,6 @@
     "chalk": "^1.1.1",
     "dotenv": "^1.2.0",
     "dragon.js": "*",
-    "dragula": "^3.6.3",
     "eisley": "*",
     "express": "^4.13.3",
     "jsonwebtoken": "^5.5.4",

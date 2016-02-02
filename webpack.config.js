@@ -7,8 +7,8 @@ module.exports = {
   entry: {
     vendor: [
       'dragon.js',
-      'dragula',
       'eisley',
+      'sortablejs'
       //'moment'
     ],
     app: [
