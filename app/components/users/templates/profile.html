@@ -1,0 +1,33 @@
+<h1>#{firstName} #{lastName} (#{username})</h1>
+
+<div class="row">
+  <form class="block-form view-form col-xs-12 col-md-12 col-lg-12">
+
+    <div id="template-field-user-first-name" class="form-group template-field template-field-text-input">
+      <h6 class="template-field-header">First Name</h6>
+      <input class="template-field-value" type="text" value="#{firstName}" autofocus />
+    </div>
+
+    <div id="template-field-user-last-name" class="form-group template-field template-field-text-input">
+      <h6 class="template-field-header">Last Name</h6>
+      <input class="template-field-value" type="text" value="#{lastName}" />
+    </div>
+
+    <div id="template-field-user-email" class="form-group template-field template-field-text-input">
+      <h6 class="template-field-header">Email</h6>
+      <input class="template-field-value" type="text" value="#{email}" />
+    </div>
+
+    <div id="template-field-user-username" class="form-group template-field template-field-text-input">
+      <h6 class="template-field-header">Username</h6>
+      <input class="template-field-value" type="text" value="#{username}" />
+    </div>
+
+    <footer class="template-footer">
+    <button id="form-submit" class="btn btn-primary btn-lg btn-submit" href="#">
+      <span class="btn-auth-text">Save</span>
+    </button>
+    </footer>
+
+  </form>
+</div>

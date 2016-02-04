@@ -1,5 +1,6 @@
 import Dragon         from 'dragon.js'
 import NavigationView from './view'
+import Organization   from '../organizations/model'
 import User           from '../../models/user'
 
 class NavigationComponent extends Dragon.Component {
@@ -14,8 +15,12 @@ class NavigationComponent extends Dragon.Component {
 
     this.navView = new NavigationView({
       container: `#${this.id}`,
-      model: new User()
+      models: {
+        organization: new Organization(),
+        user: new User()
+      }
     })
+
   }
 
 }

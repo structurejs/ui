@@ -6,28 +6,27 @@ class BaseModel extends Dragon.Model {
   constructor(attr = {}, options = {}) {
     super(attr, options)
 
-    this.resource = new Base({model: this})
-    this.schema   = options.schema
+    this.resource      = new Base({model: this})
+    this.schema        = options.schema
+    this.storeAutoLoad = (typeof options.storeAutoLoad == 'boolean') ? options.storeAutoLoad : true
 
     /*
     If the model is using a store, it will attempt to retrieve the contents
     of the store from local storage.
     */
-    if(options.store) {
-      this.store = new Dragon.Store({name: options.store})
-      this.attr  = Object.assign({}, this.attr, this.store.get())
-      window.store = this.store
+    if(this.storeAutoLoad) {
+      this.ensureStore()
+      this.pull()
+
+      var _this = this
+
+      this.storeListenerOn()
+      // TODO: This is ghetto
+      this.store.on('change', function Model_storeOnChange(name, pkg) {
+        _this.emit('store:change', name)
+      })
     }
 
-    /*
-    When updates are made to the model, the model will pass a copy of the
-    updates to the store.
-    */
-    this.on('change', () => {
-      var o = Object.assign({}, this.attr)
-      delete o.partials
-      if(this.store) this.store.set(o)
-    })
   }
 
   create() {
@@ -42,10 +41,66 @@ class BaseModel extends Dragon.Model {
 
   }
 
+  ensureStore() {
+    if(!this.store) {
+      this.store = new Dragon.Store({name: this.options.store})
+    }
+  }
+
   get() {
 
     this.resource.get.apply(this.resource, arguments)
 
+  }
+
+  pull(name) {
+
+    if(!name) name = this.options.store
+    if(!name) return
+
+    this.ensureStore()
+    //var pkg = Object.assign({}, this.attr, this.store.get())
+
+    this.set(this.store.get())
+
+  }
+
+  push(pkg = {}, options = {}) {
+
+    this.ensureStore()
+    //pkg = Object.assign({}, this.attr, pkg)
+
+    this.set(pkg)
+    this.storeListenerOff()
+    this.store.set(pkg, options)
+    setTimeout(this.storeListenerOn.bind(this), 100) // Trying to avoid setting model a second time from `store:change`
+
+  }
+
+  setActive(cb) {
+    var sid   = this.attr.sid,
+        store = new Dragon.Store({name: this.name})
+
+    this.get(sid, function(err, res) {
+      if(cb) cb()
+    })
+  }
+
+  storeListenerOn() {
+    var _this = this
+
+    this.on('store:change', (name) => {
+
+      if(name == this.options.store) {
+        this.pull()
+      }
+    })
+
+  }
+
+  storeListenerOff() {
+
+    this.off('store:change')
   }
 
   update() {
@@ -60,7 +115,10 @@ class BaseModel extends Dragon.Model {
     if(!this.schema) return cb(null, true)
 
     this.schema.validate(pkg, function(err, valid) {
-      if(err) return cb(err)
+      if(err) {
+        console.error('could not validate pkg', pkg)
+        return cb(err)
+      }
 
       return cb(null, true)
     })

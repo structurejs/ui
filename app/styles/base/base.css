@@ -5,3 +5,7 @@ body {
 ol, ul {
   padding: 0;
 }
+
+footer {
+  background: none;
+}

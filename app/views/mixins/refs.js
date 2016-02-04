@@ -1,45 +1,64 @@
+class Ref {
+
+  constructor(name, selector) {
+
+    this.name = name
+    this.$ref = document.querySelectorAll(selector)
+    this.selector = selector
+
+  }
+
+  each(cb) {
+    Array.prototype.forEach.call(this.$ref, cb)
+  }
+
+  list() {
+    return this.$ref
+  }
+
+  one(i) {
+    return this.$ref[i]
+  }
+
+  val() {
+    return (this.$ref[0] && this.$ref[0].value) ? this.$ref[0].value : ''
+  }
+
+}
+
 class RefsViewMixin {
 
-  refs() {
+  refFormValues(name) {
+    if(this.form && this.form[name]) {
+      var pkg = {}
 
-    // TODO: Not sure this is the best way to define
-    this.$refs = this.$refs || {}
+      this.form[name].forEach((refName) => {
+        var ref = this.$refs[refName]
+        pkg[ref.name] = ref.val()
+      })
 
-    var ref      = arguments[0],
-        selector = arguments[1]
-
-    switch(arguments.length) {
-
-      // GET
-      case 1:
-
-        return this.$refs[ref]
-
-        break;
-
-      // SET
-      case 2:
-
-        var $selector = this.$(selector)
-
-        if($selector.length == 1) {
-          //this.$refs[ref] = $selector[0]
-        }
-
-        else {
-          //this.$refs[ref] = $selector
-        }
-        this.$refs[ref] = $selector
-
-        break;
-
-      case 3:
-
-        break;
-
-      default:
-
+      return pkg
     }
+
+    return {}
+  }
+
+  refs(name, selector, options = {}) {
+
+    if(!this.$refs) this.$refs = {}
+
+    if(selector) {
+      this.$refs[name] = new Ref(name, selector)
+    }
+
+    if(options.form) {
+      if(!this.form) this.form = {}
+      if(!this.form[options.form]) this.form[options.form] = []
+
+      this.form[options.form].push(name)
+    }
+
+    return this.$refs[name]
 
   }
 

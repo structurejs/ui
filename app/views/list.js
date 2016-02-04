@@ -1,6 +1,6 @@
-import Dragon    from 'dragon.js'
+import BaseView from './base'
 
-class ListView extends Dragon.View {
+class ListView extends BaseView {
 
   constructor(options = {}) {
     super(options)

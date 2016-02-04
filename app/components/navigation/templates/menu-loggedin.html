@@ -1,22 +1,20 @@
-module.exports = `
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Structure <b class="caret"></b></a>
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">#{organization.title} <b class="caret"></b></a>
   <span class="dropdown-arrow"></span>
   <ul class="dropdown-menu">
     <li><a href="/templates/create">Create Template</a></li>
     <li><a href="/organizations">Organizations</a></li>
-    <li><a href="/users">Users</a></li>
+    <li><a href="/organizations/#{organization.sid}/users">Users</a></li>
     <li class="divider"></li>
     <li><a href="/settings">Settings</a></li>
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">#{username}</a>
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">#{user.username}</a>
   <span class="dropdown-arrow"></span>
   <ul class="dropdown-menu">
-    <li><a href="/users/#{sid}">Profile</a></li>
+    <li><a href="/users/#{user.sid}">Profile</a></li>
     <li class="divider"></li>
-    <li><a href="/users/#{sid}/settings">Settings</a></li>
+    <li><a href="/users/#{user.sid}/settings">Settings</a></li>
   </ul>
 </li>
-`

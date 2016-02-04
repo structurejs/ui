@@ -1,0 +1,14 @@
+.view-organization {
+
+  h1 {
+    display: inline-block;
+    margin-right: 30px;
+  }
+
+  header {
+    display: inline-block;
+    margin-top: 40px;
+    vertical-align: top;
+  }
+
+}

@@ -5,11 +5,11 @@ class FormView extends BaseView {
   constructor(options = {}) {
     super(options)
 
-    this.event('click', '.form-view input', this.inputClearError)
-    this.event('click', '.form-view #form-submit', this.formSubmit)
+    this.event('click', '.view-form input', this.inputClearError)
+    this.event('click', '.view-form #form-submit', this.formSubmit)
 
-    this.event('enter',   '.form-view', this.formSubmit)
-    this.event('keydown', '.form-view input', this.inputClearError)
+    this.event('enter',   '.view-form', this.formSubmit)
+    this.event('keydown', '.view-form input', this.inputClearError)
   }
 
   formError(err) {

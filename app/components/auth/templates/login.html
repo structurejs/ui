@@ -1,11 +1,5 @@
-module.exports = `
 <div class="row">
-  <form class="block-form form-view login-form col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4" data-state="">
-
-    <div class="form-group">
-      <input type="text" class="form-control login-field" value="" placeholder="Email" id="auth-email" autofocus>
-      <label class="login-field-icon fui-email" for="auth-email"></label>
-    </div>
+  <form class="block-form view-form login-form col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4" data-state="">
 
     <div class="form-group">
       <input type="text" class="form-control login-field" value="" placeholder="Username" id="auth-username">
@@ -19,11 +13,9 @@ module.exports = `
 
     <button id="form-submit" class="btn btn-primary btn-lg btn-block btn-submit" href="#">
       <span class="btn-auth-text">#{text.submit}</span>
-
     </button>
 
-    <a class="link-login" href="/auth/login">Sign In</a>
+    <a class="link-create-account" href="/auth/create">Create Account</a>
 
   </form>
 </div>
-`

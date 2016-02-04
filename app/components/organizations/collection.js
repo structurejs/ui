@@ -6,16 +6,16 @@ class OrganizationCollection extends BaseCollection {
 
   constructor(attr = {}, options = {}) {
     super(attr, Object.assign({}, {
-      model: OrganizationModel
+      Model: OrganizationModel
     }, options))
 
     this.resource = new Organization({model: this})
   }
 
-  fetch(cb) {
+  fetch(options = {}, cb) {
     var _this = this
-
-    this.resource.list(null, function listFetchCallback(err, res) {
+    console.log('args up', arguments)
+    this.resource.list(options, function listFetchCallback(err, res) {
 
       if(err) {
         return cb(err)
@@ -23,7 +23,7 @@ class OrganizationCollection extends BaseCollection {
 
       _this.add(res)
 
-      return cb(null, res)
+      if(typeof cb == 'function') return cb(null, res)
 
     })
 

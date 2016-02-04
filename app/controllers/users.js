@@ -5,6 +5,8 @@ import IndexView           from '../components/users/views/index'
 import ListView            from '../components/users/views/list'
 import ProfileView         from '../components/users/views/profile'
 import NavigationComponent from '../components/navigation/index'
+import Organization        from '../components/organizations/model'
+import schemaCreate        from '../components/users/schemas/create'
 import User                from '../models/user'
 import Users               from '../components/users/collection'
 
@@ -15,7 +17,12 @@ class UserController extends Dragon.Controller {
     this.compose('navigation', NavigationComponent)
 
     this.view = new CreateView({
-      model: new User()
+      model: new User({
+        organizations: [new Organization().attr.id]
+      }, {
+        schema: schemaCreate,
+        storeAutoLoad: false
+      })
     })
 
   }

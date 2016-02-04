@@ -35,8 +35,13 @@ class NavigationView extends Dragon.View {
 
       default:
 
+        var loggedInData = {
+          organization: this.models.organization.attr,
+          user: this.models.user.attr
+        }
+
         return Object.assign({}, state, {
-          menu: this.model.attr.id ? partial('loggedIn', this.model.attr) : partial('loggedOut', this.model.attr)
+          menu: this.models.user.attr.id ? partial('loggedIn', loggedInData) : partial('loggedOut')
         })
 
     }

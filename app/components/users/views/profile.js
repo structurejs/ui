@@ -1,6 +1,6 @@
-import BaseView from '../../../views/base'
+import FormView from '../../../views/form'
 
-class UserProfileView extends BaseView {
+class UserProfileView extends FormView {
 
   constructor(options = {}) {
 
@@ -13,8 +13,45 @@ class UserProfileView extends BaseView {
 
   }
 
-  onAddedToDOM() {
+  formSubmit(e) {
+    e.preventDefault()
 
+    this.state('submitting')
+
+    var pkg = this.refFormValues('user-profile')
+    pkg.organizations = this.model.attr.organizations
+
+    /*console.log('form pkg', pkg)
+    return*/
+
+    this.model.validate(pkg, (err, valid) => {
+
+      if(err) {
+        this.state('error')
+        console.error('No validy yos', err)
+        return
+      }
+
+      this.model.update(this.model.attr.sid, pkg, function(err, res) {
+
+        if(err) {
+          console.error('Update user error :/', err)
+          return
+        }
+
+        console.log('Update user successful', res)
+
+      })
+
+    })
+
+  }
+
+  onAddedToDOM() {
+    this.refs('email',     '#template-field-user-email input',      {form: 'user-profile'})
+    this.refs('firstName', '#template-field-user-first-name input', {form: 'user-profile'})
+    this.refs('lastName',  '#template-field-user-last-name input',  {form: 'user-profile'})
+    this.refs('username',  '#template-field-user-username input',   {form: 'user-profile'})
   }
 
   reducer(state = initialState, action) {

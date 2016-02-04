@@ -46,6 +46,7 @@ module.exports = {
           //plugins: ['transform-runtime']
         }
       },
+      { test: /\.html/,  loader: 'file-to-string-loader' },
       { test: /\.json$/, loader: 'json-loader' },
 
       // Bootstrap
@@ -64,18 +65,17 @@ module.exports = {
 
   resolve: {
     alias: {},
-    extensions: ['', '.js', '.json'],
+    extensions: ['', '.html', '.js', '.json'],
     modulesDirectories: ['node_modules'],
     root: [
       path.resolve(__dirname, './app'),
-      //path.resolve(__dirname, './node_modules')
     ]
   },
   resolveLoader: {root: path.join(__dirname, 'node_modules')},
 
   plugins: [
     new webpack.ContextReplacementPlugin(/buffer/, require('node-libs-browser/mock/buffer')),
-    new webpack.IgnorePlugin(/node_modules\/^dragon.js/),
+    //new webpack.IgnorePlugin(/node_modules\/^dragon.js/),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
     new ChunkManifestPlugin({

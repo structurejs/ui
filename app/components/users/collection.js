@@ -12,18 +12,18 @@ class UserCollection extends BaseCollection {
     this.resource = new User({model: this})
   }
 
-  fetch(cb) {
+  fetch(options = {}, cb) {
     var _this = this
 
-    this.resource.list(null, function listFetchCallback(err, res) {
+    this.resource.list(options, function listFetchCallback(err, res) {
 
       if(err) {
         return cb(err)
       }
 
       _this.add(res)
-      console.log(res)
-      return cb(null, res)
+
+      if(typeof cb == 'function') return cb(null, res)
 
     })
 
