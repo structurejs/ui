@@ -1,7 +1,15 @@
-import BaseView from '../../../views/base'
-import Sortable from 'sortablejs'
+import Field      from '../models/field'
+import FormView   from '../../../views/form'
+import {router}   from '../../../index'
+import Sortable   from 'sortablejs'
+import {Template} from 'starplate'
+var StarplateTemplate = Template
 
-class TemplateView extends BaseView {
+var partialBtnAPI    = new StarplateTemplate(require('../templates/partials/json-api')),
+    partialTextArea  = new StarplateTemplate(require('../templates/text-area')),
+    partialTextInput = new StarplateTemplate(require('../templates/text-input'))
+
+class TemplateView extends FormView {
 
   constructor(options = {}) {
 
@@ -42,81 +50,40 @@ class TemplateView extends BaseView {
 
   }
 
-  /*
-  TODO: Yes, it would be much smarter to create a system that doesn't require
-  reading the DOM to get this information. But this is an MVP, and the correct
-  way is just gonna take 10x longer.
-  */
-  getAllFieldsFromDOM() {
+  formSubmit(e) {
+    e.preventDefault()
 
-    var list = document.querySelectorAll('#template-fields .template-field')
+    this.state('submitting')
 
-    var fields = []
+    //this.childContainer('template-header').update({current: 'saving'})
 
-    Array.prototype.forEach.call(list, function(el) {
-      var classes = el.className.split(' ')
+    var pkg = {
+      header: document.querySelectorAll('#template-create-view h1')[0].innerText,
+      fields: this.collections.template.getData().map((model) => {
+        delete model.fieldCounter
+        return model
+      }),
+      organizations: [this.models.organization.attr.id]
+    }
 
-      var inputType = null
+    console.log('form pkg', pkg)
 
-      for(var i = 0, l = classes.length; i < l; i++) {
+    this.collections.template.create(pkg, function(err, res) {
 
-        switch(classes[i]) {
-
-          case 'template-field-text-input':
-
-            inputType = 'text-input'
-            break
-
-          case 'template-field-text-area':
-
-            inputType = 'text-area'
-            break
-
-        }
-
-        if(inputType) break
-
+      if(err) {
+        console.error('Create template error :/', err)
+        return
       }
 
-      var children = el.children,
-          desc     = '',
-          title    = '',
-          value    = ''
-
-      for(var j = 0, k = children.length; j < k; j++) {
-        var chEl = children[j]
-        //console.log(chEl)
-        switch(chEl.tagName.toLowerCase()) {
-
-          case 'h6': title = chEl.innerText; break;
-
-          case 'input':
-
-            if(chEl.className.indexOf('-value') > -1) {
-              value = chEl.value; break;
-            }
-
-            if(chEl.className.indexOf('-desc') > -1) {
-              desc = chEl.value; break;
-            }
-
-          case 'textarea': value = chEl.value; break;
-
-        }
-
-      }
-
-      fields.push({
-        desc,
-        title,
-        type: inputType,
-        value
-      })
+      console.log('Create template successful', res)
+      router.navigate(`/templates/${res.sid}`)
 
     })
 
-    console.log(fields)
+  }
 
+  getFieldIndex(e) {
+    return this.getElementIndex(e.target.parentNode.parentNode.childNodes, e.target.parentNode)
   }
 
   onAddedToDOM() {
@@ -126,57 +93,134 @@ class TemplateView extends BaseView {
     this.refs('template-field-delete', '.template-field-delete')
     this.refs('template-fields',       '#template-fields')
 
-    this.event('click', this.refs('save'), this.onSave)
-
     this.event('click', this.refs('menu-text-area'), this.onAddTextArea)
     this.event('click', this.refs('menu-text-input'), this.onAddTextInput)
     this.delegateEvent('click', this.refs('template-fields'), '.template-field-delete', this.onTemplateFieldDelete)
+    this.delegateEvent('keyup', this.refs('template-fields'), '.template-field', this.debounce(this.onFieldKeyUp, 1000))
   }
 
   onAddTextArea(e) {
     e.preventDefault()
+
     this.fieldCounter++
-
-    var html = require('../templates/text-area')({fieldCounter: this.fieldCounter})
-
-    this.refs('template-fields')[0].insertAdjacentHTML('beforeend', html)
+    this.collections.template.add({
+      fieldCounter: this.fieldCounter,
+      type: 'text-area'
+    })
 
     this.startDragDrop()
   }
 
   onAddTextInput(e) {
     e.preventDefault()
+
     this.fieldCounter++
+    this.collections.template.add({
+      fieldCounter: this.fieldCounter,
+      type: 'text-input'
+    })
 
-    var html = require('../templates/text-input')({fieldCounter: this.fieldCounter})
-
-    this.refs('template-fields')[0].insertAdjacentHTML('beforeend', html)
+    /*
+    TODO: figure out why this isn working
+    */
+    /*setTimeout(() => {
+      document.getElementById(`template-field-${this.fieldCounter}`).focus()
+    }, 100)*/
 
     this.startDragDrop()
   }
 
-  onSave(e) {
-    e.preventDefault()
+  onDragEnd(e) {
+    var fromIndex = e.oldIndex,
+        toIndex   = e.newIndex
 
-    this.childContainer('template-header').update({current: 'saving'})
+    this.collections.template.move(fromIndex, toIndex)
+  }
 
-    this.getAllFieldsFromDOM()
+  onFieldKeyUp(e) {
+    var index = this.getFieldIndex(e)
+
+    var model = this.collections.template.models[index]
+
+    switch(model.attr.type) {
+
+      case 'text-area':
+
+        var header = document.querySelectorAll(`#${e.target.parentNode.id} .template-field-header`)[0].innerText
+
+        model.set({
+          //body: document.querySelectorAll(`#${e.target.parentNode.id} .template-field-value`)[0].value,
+          desc: document.querySelectorAll(`#${e.target.parentNode.id} .template-field-desc`)[0].value,
+          header,
+          name: header.toLowerCase()
+        })
+
+        break
+
+      case 'text-input':
+
+        var header = document.querySelectorAll(`#${e.target.parentNode.id} .template-field-header`)[0].innerText
+
+        model.set({
+          //body: document.querySelectorAll(`#${e.target.parentNode.id} .template-field-value`)[0].value,
+          desc: document.querySelectorAll(`#${e.target.parentNode.id} .template-field-desc`)[0].value,
+          header,
+          name: header.toLowerCase()
+        })
+
+        break
+
+    }
+
   }
 
   onTemplateFieldDelete(e) {
     e.preventDefault()
 
-    var tplField = e.target.parentElement
-    tplField.parentElement.removeChild(tplField)
+    var index = this.getFieldIndex(e)
+
+    this.collections.template.remove(index)
+
+    this.startDragDrop()
   }
 
   reducer(state = initialState, action) {
+    console.log('what is this', this.collections.template.options.data.sid)
+    var btnAPI = (this.collections.template.options.data.sid) ? partialBtnAPI.render({
+      organizationId: this.models.organization.attr.id,
+      sid: this.collections.template.options.data.sid
+    }) : ''
+
+    var header = (this.collections.template.options.data.header) ? this.collections.template.options.data.header : 'New Template'
+
+    var fields = this.collections.template.getData().map( (field, i) => {
+      var model = Object.assign({}, this.collections.template.models[i].attr)
+
+      //if(!model.fieldCounter) model.fieldCounter = i
+      if(!model.header) model.header = `Field ${model.fieldCounter}`
+
+      switch(field.type) {
+
+        case 'text-area':
+          console.log('model', model)
+          return partialTextArea.render(model)
+
+        case 'text-input':
+
+          return partialTextInput.render(model)
+
+      }
+
+    }).join('')
 
     switch(state.current) {
 
       default:
 
         return Object.assign({}, state, {
+          btnAPI,
+          fields,
+          header,
           state: '',
           text: {
             save: 'Save'
@@ -195,6 +239,9 @@ class TemplateView extends BaseView {
         draggable: '.template-field',
         delay: 0,
         forceFallback: false,
+        onEnd: (e) => {
+          this.onDragEnd(e)
+        },
         scroll: false,
         sort: true,
       })

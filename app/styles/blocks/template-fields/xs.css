@@ -1,6 +1,8 @@
-.btn-group {
+.btn, .btn-group {
   margin-right: 20px;
 }
+
+.btn-group .btn {margin-right: 0}
 
 #template-fields {
   margin-top: 20px;
@@ -67,6 +69,7 @@
 
 .template-footer {
   display: block;
+  margin-bottom: 500px;
   margin-top: 30px;
   width: 100%;
 }

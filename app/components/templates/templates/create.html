@@ -1,19 +1,33 @@
-<div class="template-field-header #{state}">
-  <div class="btn-group">
-    <div data-toggle="dropdown" class="btn btn-info dropdown-toggle">
-      Add Field<span class="caret"></span>
-      <ul role="menu" class="dropdown-menu">
-        <li><a href="#text-input">Text Input</a></li>
-        <li><a href="#text-area">Text Area</a></li>
-        <li><a href="#wysiwym">WYSIWYM</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Other</a></li>
-      </ul>
-    </div>
-  </div>
+<div class="template-field-header #{state}"></div>
 
-  <a id="btn-save-template" href="#save-template" class="btn btn-lg btn-primary">#{text.save}</a>
-</div>
+<h1 contentEditable="true">#{header}</h1>
 
-<div id="template-fields">
+<div class="row">
+  <form class="block-form view-form col-xs-12 col-md-12 col-lg-12">
+
+    <div id="template-fields">#{fields}</div>
+
+    <footer class="template-footer">
+      <div class="btn-group">
+        <div data-toggle="dropdown" class="btn btn-info dropdown-toggle">
+          Add Field<span class="caret"></span>
+          <ul role="menu" class="dropdown-menu">
+            <li><a href="#text-input">Text Input</a></li>
+            <li><a href="#text-area">Text Area</a></li>
+            <li><a href="#wysiwym">WYSIWYM</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Other</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <button id="form-submit" class="btn btn-primary btn-lg btn-submit" href="#">
+        <span class="btn-auth-text">Save</span>
+      </button>
+
+      #{btnAPI}
+
+    </footer>
+
+  </form>
 </div>

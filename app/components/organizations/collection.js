@@ -14,7 +14,7 @@ class OrganizationCollection extends BaseCollection {
 
   fetch(options = {}, cb) {
     var _this = this
-    console.log('args up', arguments)
+
     this.resource.list(options, function listFetchCallback(err, res) {
 
       if(err) {

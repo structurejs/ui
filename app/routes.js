@@ -15,6 +15,7 @@ module.exports = (router) => {
   router.get('/settings',                 {action: 'index'})
 
   router.get('/templates/create')
+  router.get('/templates/:sid',           {action: 'template'})
 
   router.get('/users/create')
   router.get('/users/:sid',               {action: 'profile'})

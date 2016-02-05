@@ -12,7 +12,7 @@ class Ref {
     Array.prototype.forEach.call(this.$ref, cb)
   }
 
-  list() {
+  nodes() {
     return this.$ref
   }
 
